@@ -1,8 +1,11 @@
 FROM quay.io/projectquay/golang:1.20 AS builder
-
 WORKDIR /go/src/app
+ARG TARGETOS
+ENV OS=${TARGETOS}
+RUN echo "Building for OS: ${OS}"
+
 COPY . .
-RUN make build
+RUN make ${OS}
 
 FROM scratch
 WORKDIR /
