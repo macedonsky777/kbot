@@ -6,7 +6,7 @@ replicaCount: 1
 
 image:
   repository: "777777777777777"
-tag: "v1.0.5-f6ae942"
+  tag: "v1.0.5-f6ae942"
 secret:
   name: "kbot"
   env: "TELE_TOKEN"
