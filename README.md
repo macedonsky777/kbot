@@ -22,3 +22,4 @@ ctrl+v your telegram token
 export TELE_TOKEN 
 4. ./kbot go 
 For launch
+___
