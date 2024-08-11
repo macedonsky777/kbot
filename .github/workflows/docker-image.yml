@@ -16,6 +16,8 @@ jobs:
 
     - name: Brew install
       run: brew install go docker
+    - name: test
+      run: ln -s ~/.docker/run/docker.sock /var/run/docker.sock
         
     - name: Run tests
       run: make test
