@@ -1,0 +1,38 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: macos-latest
+
+    steps:
+    - name: checkout
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+        
+    - name: Run tests
+      run: make test
+    - name: Run build
+      run: make build
+    - name: Build the Docker image
+      run: make image
+
+    - name: Get app name from git remote URL
+      id: get-app-name
+      run: |
+        APP_NAME=$(basename $(git remote get-url origin) .git)
+        echo "APP_NAME=$APP_NAME" >> $GITHUB_ENV
+    - name: Get version tag     
+      id: get-version-tag
+      run: |
+        VERSION=$(git describe --tags --abbrev=0)-$(git rev-parse --short HEAD)
+        echo "VERSION=$VERSION" >> $GITHUB_ENV
+    - name: Github Container Registry push Docker image
+      uses: pmorelli92/github-container-registry-build-push@2.1.0
+      with:
+          github-push-secret: GITHUB_TOKEN
+          docker-image-name: ${{ env.APP_NAME }}:${{ env.VERSION }}
