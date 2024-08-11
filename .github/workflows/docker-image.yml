@@ -34,6 +34,6 @@ jobs:
     - name: Github Container Registry push Docker image
       uses: pmorelli92/github-container-registry-build-push@2.1.0
       with:
-          github-push-secret: GITHUB_TOKEN
+          github-push-secret: ${{ secrets.TOKENELLO }}
           docker-image-name: ${{ env.APP_NAME }}
           docker-image-tag: ${{ env.VERSION }}
