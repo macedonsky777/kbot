@@ -13,6 +13,9 @@ jobs:
       uses: actions/checkout@v4
       with:
         fetch-depth: 0
+
+    - name: Brew install
+      run: brew install go    
         
     - name: Run tests
       run: make test
