@@ -43,19 +43,14 @@ jobs:
         helm package helm --destination ./new
         ls -l *.tgz
 
-    - name: Github Release
-      uses: elgohr/Github-Release-Action@v5
-      env:
-        GH_TOKEN: ${{ secrets.PIPIGA }}
+    - name: Release file
+      uses: djnicholson/release-action@v2.10
       with:
-        title: helm-kbot.tgz
-        workdir: new
-    - name: Helm Chart Releaser
-      uses: helm/chart-releaser-action@v1.6.0
-      env:
-          CR_TOKEN: "${{ secrets.PIPIGA }}"
-      with:
-        charts_dir: ./helm
+          token: ${{ secrets.PIPIGA }}
+          release-name: kbot-helm
+          tag-name: ${{ env.VERSION }}-${{ env.TARGETARCH }}
+          asset-name: kbot-helm
+          file: helm-0.1.0.tgz
         
         
     - name: Github Container Registry push Docker image
