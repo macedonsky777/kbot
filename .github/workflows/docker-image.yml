@@ -55,7 +55,7 @@ jobs:
       env:
           CR_TOKEN: "${{ secrets.PIPIGA }}"
       with:
-        charts_dir: helm
+        charts_dir: ./helm
         
         
     - name: Github Container Registry push Docker image
