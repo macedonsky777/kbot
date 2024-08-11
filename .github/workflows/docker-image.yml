@@ -33,7 +33,7 @@ jobs:
         echo VERSION=$VERSION >> $GITHUB_ENV
     - name: Update Helm chart values.yaml with new image tag
       run: |
-        sed -i 's/tag:.*/tag: ""${{ env.VERSION }}"-amd64"/' ./helm/values.yaml 
+        sed -i 's/tag:.*/tag: "${{ env.VERSION }}-amd64"/' ./helm/values.yaml 
         cat ./helm/values.yaml 
         pwd
         ls
