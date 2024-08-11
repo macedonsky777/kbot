@@ -6,18 +6,13 @@ on:
 
 jobs:
   build:
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
 
     steps:
     - name: checkout
       uses: actions/checkout@v4
       with:
         fetch-depth: 0
-
-    - name: Brew install
-      run: brew install go docker
-    - name: test
-      run: colima start
         
     - name: Run tests
       run: make test
@@ -39,5 +34,5 @@ jobs:
     - name: Github Container Registry push Docker image
       uses: pmorelli92/github-container-registry-build-push@2.1.0
       with:
-          github-push-secret: GITHUB_TOKEN
+          github-push-secret: ${{ secrets.TOKENELLO }}
           docker-image-name: ${{ env.APP_NAME }}:${{ env.VERSION }}
