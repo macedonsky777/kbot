@@ -39,7 +39,8 @@ jobs:
         ls
     - name: Package Helm chart
       run: |
-        helm package helm
+        mkdir new
+        helm package helm --destination ./new
         ls -l *.tgz
 
     - name: Set up Git
@@ -73,17 +74,6 @@ jobs:
         git tag $NEW_TAG
         git push origin $NEW_TAG
 
-    - name: Create GitHub Release
-      id: create_release
-      uses: actions/create-release@v1.1.2
-      env:
-        GITHUB_TOKEN: ${{ secrets.PIPIGA }}
-      with:
-        tag_name: ${{ env.NEW_TAG }}
-        release_name: Release ${{ env.NEW_TAG }}
-        draft: false
-        prerelease: false
-
     
     - name: Debug the Upload URL
       run: |
@@ -96,19 +86,19 @@ jobs:
         echo "CLEAN_UPLOAD_URL=${CLEAN_UPLOAD_URL}" >> $GITHUB_ENV
 
 
-
-    - name: Upload Helm Chart to Release
-      uses: actions/upload-release-asset@v1
+    - name: Github Release
+      uses: elgohr/Github-Release-Action@v5
       env:
-        GITHUB_TOKEN: ${{ secrets.PIPIGA }}
+        GH_TOKEN: ${{ secrets.PIPIGA }}
       with:
-        upload_url: ${{ env.CLEAN_UPLOAD_URL }}
-        asset_path: ./helm-0.1.0.tgz
-        asset_name: helm-chart.tgz
-        asset_content_type: application/gzip
+        title: helm-kbot.tgz
+        workdir: new
+   
     - name: Github Container Registry push Docker image
       uses: pmorelli92/github-container-registry-build-push@2.1.0
       with:
           github-push-secret: ${{ secrets.TOKENELLO }}
           docker-image-name: ${{ env.APP_NAME }}
           docker-image-tag: ${{ env.VERSION }}-${{ env.TARGETARCH }}
+
+
