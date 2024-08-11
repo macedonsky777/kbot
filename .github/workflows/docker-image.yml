@@ -3,7 +3,8 @@ name: Docker Image CI
 on:
   push:
     branches: [ "develop" ]
-      - 'v*.*.*'  # This triggers the workflow only when a tag is pushed
+      tags:
+        - 'v*.*.*'  # This triggers the workflow only when a tag is pushed
 
 jobs:
   build:
