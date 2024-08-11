@@ -98,7 +98,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.PIPIGA }}
       with:
         upload_url: ${{ env.CLEAN_UPLOAD_URL }}
-        asset_path: helm-0.1.0.tgz
+        asset_path: /home/runner/work/kbot/kbot/helm-0.1.0.tgz
         asset_name: helm-0.1.0.tgz
         asset_content_type: application/gzip
     - name: Github Container Registry push Docker image
