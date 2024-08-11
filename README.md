@@ -1,5 +1,6 @@
 ___
-# kbot
+# kbot!
+
 devops application from scratch
 
 Simple bot for telegram wrote on GO
