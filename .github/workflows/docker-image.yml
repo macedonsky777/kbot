@@ -3,8 +3,6 @@ name: Docker Image CI
 on:
   push:
     branches: [ "develop" ]
-      tags:
-        - 'v*.*.*'  # This triggers the workflow only when a tag is pushed
 
 jobs:
   build:
@@ -44,14 +42,44 @@ jobs:
         helm package helm
         ls -l *.tgz
 
+    - name: Set up Git
+      run: |
+        git config user.name "GitHub Actions"
+        git config user.email "actions@github.com"
+
+    - name: Extract the latest version tag
+      id: get_version
+      run: |
+        LATEST_TAG=$(git describe --tags `git rev-list --tags --max-count=1`)
+        echo "LATEST_TAG=${LATEST_TAG#v}" >> $GITHUB_ENV
+
+    - name: Bump version
+      id: bump_version
+      run: |
+        # Extract major, minor, and patch numbers
+        IFS='.' read -r -a VERSION_PARTS <<< "$LATEST_TAG"
+        MAJOR="${VERSION_PARTS[0]}"
+        MINOR="${VERSION_PARTS[1]}"
+        PATCH="${VERSION_PARTS[2]}"
+
+        # Increment the patch version
+        PATCH=$((PATCH + 1))
+
+        # Create new version tag
+        NEW_TAG="v$MAJOR.$MINOR.$PATCH"
+        echo "NEW_TAG=${NEW_TAG}" >> $GITHUB_ENV
+
+        # Create the new tag in the repository
+        git tag $NEW_TAG
+        git push origin $NEW_TAG
+
     - name: Create GitHub Release
-      id: create_release
       uses: actions/create-release@v1
       env:
         GITHUB_TOKEN: ${{ secrets.PIPIGA }}
       with:
-        tag_name: ${{ github.ref }}
-        release_name: Release ${{ github.ref }}
+        tag_name: ${{ env.NEW_TAG }}
+        release_name: Release ${{ env.NEW_TAG }}
         draft: false
         prerelease: false
 
@@ -60,9 +88,9 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.PIPIGA }}
       with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./helm-0.1.0.tgz
-        asset_name: ./helm-0.1.0.tgz
+        upload_url: ${{ steps.create-release.outputs.upload_url }}
+        asset_path: ./helm.1.0.1.tgz
+        asset_name: helm.1.0.1.tgz
         asset_content_type: application/gzip
     - name: Github Container Registry push Docker image
       uses: pmorelli92/github-container-registry-build-push@2.1.0
