@@ -30,35 +30,29 @@ jobs:
       id: get-version-tag
       run: |
         VERSION=$(git describe --tags --abbrev=0)-$(git rev-parse --short HEAD)
-        echo "VERSION=$VERSION" >> $GITHUB_ENV
+        echo VERSION=$VERSION >> $GITHUB_ENV
     - name: Update Helm chart values.yaml with new image tag
       run: |
-        sed -i 's/tag:.*/tag: "{{ env.VERSION }}"-amd4/' helm/values.yaml
+        sed -i 's/tag:.*/tag: "${{ env.VERSION }}-amd64"/' ./helm/values.yaml 
+        cat ./helm/values.yaml 
+        pwd
+        ls
     - name: Package Helm chart
       run: |
-        helm package helm
+        mkdir new
+        helm package helm --destination ./new
         ls -l *.tgz
 
-    - name: Create GitHub Release
-      id: create_release
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.PIPIGA }}
+    - name: Release file
+      uses: djnicholson/release-action@v2.10
       with:
-        tag_name: ${{ github.ref }}
-        release_name: Release ${{ github.ref }}
-        draft: false
-        prerelease: false
-
-    - name: Upload Helm Chart to Release
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.PIPIGA }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./helm.tgz
-        asset_name: ./helm.tgz
-        asset_content_type: application/gzip
+          token: ${{ secrets.PIPIGA }}
+          release-name: kbot-helm
+          tag-name: ${{ env.VERSION }}-${{ env.TARGETARCH }}
+          asset-name: kbot-helm
+          file: helm-0.1.0.tgz
+        
+        
     - name: Github Container Registry push Docker image
       uses: pmorelli92/github-container-registry-build-push@2.1.0
       with:
