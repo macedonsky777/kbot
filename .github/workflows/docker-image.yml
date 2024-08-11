@@ -84,16 +84,20 @@ jobs:
         draft: false
         prerelease: false
 
-    - name: Debug Outputs
+    - name: Clean up Upload URL
+      id: cleanup_url
       run: |
-        echo "Upload URL: ${{ steps.create_release.outputs.upload_url }}"
+        CLEAN_UPLOAD_URL="${{ steps.create_release.outputs.upload_url }}"; CLEAN_UPLOAD_URL=${CLEAN_UPLOAD_URL%\{?*}
+        echo "CLEAN_UPLOAD_URL=${CLEAN_UPLOAD_URL}" >> $GITHUB_ENV
+
+
 
     - name: Upload Helm Chart to Release
       uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ secrets.PIPIGA }}
       with:
-        upload_url: ${{ steps.create-release.outputs.upload_url }}
+        upload_url: ${{ env.CLEAN_UPLOAD_URL }}
         asset_path: ./helm.1.0.1.tgz
         asset_name: helm.1.0.1.tgz
         asset_content_type: application/gzip
