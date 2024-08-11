@@ -15,7 +15,7 @@ jobs:
         fetch-depth: 0
 
     - name: Brew install
-      run: brew install go    
+      run: brew install go docker
         
     - name: Run tests
       run: make test
