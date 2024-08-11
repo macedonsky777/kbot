@@ -7,6 +7,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      TARGETARCH: amd64 
 
     steps:
     - name: checkout
@@ -34,4 +36,4 @@ jobs:
       with:
           github-push-secret: ${{ secrets.TOKENELLO }}
           docker-image-name: ${{ env.APP_NAME }}
-          docker-image-tag: ${{ env.VERSION }}
+          docker-image-tag: ${{ env.VERSION }}-${{ env.TARGETARCH }}
