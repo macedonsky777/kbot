@@ -33,5 +33,5 @@ jobs:
       uses: pmorelli92/github-container-registry-build-push@2.1.0
       with:
           github-push-secret: ${{ secrets.TOKENELLO }}
-          docker-image-name: ${{ env.APP_NAME }}/
+          docker-image-name: ${{ env.APP_NAME }}/${{ env.APP_NAME }}
           docker-image-tag: ${{ env.VERSION }}
