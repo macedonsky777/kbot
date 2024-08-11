@@ -84,6 +84,10 @@ jobs:
         draft: false
         prerelease: false
 
+    - name: Debug Outputs
+      run: |
+        echo "Upload URL: ${{ steps.create_release.outputs.upload_url }}"
+
     - name: Upload Helm Chart to Release
       uses: actions/upload-release-asset@v1
       env:
