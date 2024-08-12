@@ -12,9 +12,9 @@ jobs:
 
     steps:
     - name: checkout
-      uses: actions/checkout@v4
+      uses: actions/checkout@v4.1.7
       with:
-        fetch-depth: 0
+        fetch-depth: 1
         
     - name: Run tests
       run: make test
