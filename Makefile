@@ -1,8 +1,8 @@
 VERSION=$(shell git describe --tags --abbrev=0)-$(shell git rev-parse --short HEAD)
-REGISTRY=777777777777777
+REGISTRY=ghcr.io/macedonsky777
 APP=$(shell basename $(shell git remote get-url origin))
-TARGETOS=linux #macos-darwin windows
-TARGETARCH=arm64 #x86-64 
+TARGETOS=linux 
+TARGETARCH=arm64
 
 format:
 	gofmt -s -w ./
