@@ -42,7 +42,6 @@ jobs:
       run: |
         mkdir new
         helm package helm --destination ./new
-        ls -l *.tgz
 
 #    - name: Release file
 #      uses: djnicholson/release-action@v2.10
