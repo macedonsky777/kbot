@@ -25,12 +25,14 @@ jobs:
       id: get-app-name
       run: |
         APP_NAME=$(basename $(git remote get-url origin) .git)
+        echo "APP_NAME=$APP_NAME"
         echo "APP_NAME=$APP_NAME" >> $GITHUB_ENV
     - name: Get version tag     
       id: get-version-tag
       run: |
         VERSION=$(git describe --tags --abbrev=0)-$(git rev-parse --short HEAD)
-        echo VERSION=$VERSION >> $GITHUB_ENV
+        echo "VERSION=$VERSION"
+        echo "VERSION=$VERSION" >> $GITHUB_ENV
     - name: Update Helm chart values.yaml with new image tag
       run: |
         sed -i 's/tag:.*/tag: "${{ env.VERSION }}-amd64"/' ./helm/values.yaml 
