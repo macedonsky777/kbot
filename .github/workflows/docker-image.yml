@@ -27,11 +27,11 @@ jobs:
         APP_NAME=$(basename $(git remote get-url origin) .git)
         echo "APP_NAME=$APP_NAME"
         echo "APP_NAME=$APP_NAME" >> $GITHUB_ENV
-    - name: Git Version
-      uses: codacy/git-version@2.4.0
+    - name: Bump version and push tag
+      id: tag_version
+      uses: mathieudutour/github-tag-action@v6.2
       with:
-          release-branch: main
-          dev-branch: develop
+          github_token: ${{ secrets.TOKENELLO }}
     - name: Get version tag     
       id: get-version-tag
       run: |
@@ -40,7 +40,7 @@ jobs:
         echo "VERSION=$VERSION" >> $GITHUB_ENV
     - name: Update Helm chart values.yaml with new image tag
       run: |
-        sed -i 's/tag:.*/tag: "${{ steps.version.outputs.version }}-amd64"/' ./helm/values.yaml 
+        sed -i 's/tag:.*/tag: "${{ steps.tag_version.outputs.new_tag }}-amd64"/' ./helm/values.yaml 
         cat ./helm/values.yaml 
         pwd
         ls
@@ -65,6 +65,6 @@ jobs:
       with:
           github-push-secret: ${{ secrets.TOKENELLO }}
           docker-image-name: ${{ env.APP_NAME }}
-          docker-image-tag: ${{ steps.version.outputs.version }}-${{ env.TARGETARCH }}
+          docker-image-tag: ${{ steps.tag_version.outputs.new_tag }}-${{ env.TARGETARCH }}
 
 
