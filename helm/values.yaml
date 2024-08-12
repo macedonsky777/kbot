@@ -8,6 +8,7 @@ image:
   repository: "ghcr.io/macedonsky777/kbot"
   tag: "v1.1.16-c7fee24-linux-amd64"
   arch: amd64
+  os: linux
 secret:
   name: "kbot"
   env: "TELE_TOKEN"
