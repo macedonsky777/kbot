@@ -37,8 +37,7 @@ jobs:
       run: |
         sed -i 's/tag:.*/tag: "${{ env.VERSION }}-linux-amd64"/' ./helm/values.yaml 
         cat ./helm/values.yaml 
-        pwd
-        ls
+        
     - name: Package Helm chart
       run: |
         mkdir new
