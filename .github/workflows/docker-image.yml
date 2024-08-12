@@ -60,4 +60,8 @@ jobs:
           docker-image-name: ${{ env.APP_NAME }}
           docker-image-tag: ${{ env.VERSION }}-linux-${{ env.TARGETARCH }}
 
-
+    - run: |
+        git config user.name github-actions
+        git config user.email github-actions@github.com
+        git commit -am "update version ${{ env.VERSION }}"
+        git push
