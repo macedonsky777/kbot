@@ -40,7 +40,7 @@ jobs:
         echo "VERSION=$VERSION" >> $GITHUB_ENV
     - name: Update Helm chart values.yaml with new image tag
       run: |
-        sed -i 's/tag:.*/tag: "${{ steps.tag_version.outputs.new_tag }}-amd64"/' ./helm/values.yaml 
+        sed -i 's/tag:.*/tag: "${{ steps.tag_version.outputs.new_tag }}linux-amd64"/' ./helm/values.yaml 
         cat ./helm/values.yaml 
         pwd
         ls
@@ -65,6 +65,6 @@ jobs:
       with:
           github-push-secret: ${{ secrets.TOKENELLO }}
           docker-image-name: ${{ env.APP_NAME }}
-          docker-image-tag: ${{ steps.tag_version.outputs.new_tag }}-${{ env.TARGETARCH }}
+          docker-image-tag: ${{ steps.tag_version.outputs.new_tag }}-linux-${{ env.TARGETARCH }}
 
 
