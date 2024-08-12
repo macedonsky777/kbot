@@ -50,14 +50,14 @@ jobs:
         helm package helm --destination ./new
         ls -l *.tgz
 
-    - name: Release file
-      uses: djnicholson/release-action@v2.10
-      with:
-          token: ${{ secrets.PIPIGA }}
-          release-name: kbot-helm
-          tag-name: ${{ steps.version.outputs.version }}-${{ env.TARGETARCH }}
-          asset-name: kbot-helm
-          file: helm-0.1.0.tgz
+#    - name: Release file
+#      uses: djnicholson/release-action@v2.10
+#      with:
+#          token: ${{ secrets.PIPIGA }}
+#          release-name: kbot-helm
+#          tag-name: ${{ steps.version.outputs.version }}-${{ env.TARGETARCH }}
+#          asset-name: kbot-helm
+#          file: helm-0.1.0.tgz
         
         
     - name: Github Container Registry push Docker image
