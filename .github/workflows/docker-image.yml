@@ -14,7 +14,7 @@ jobs:
     - name: checkout
       uses: actions/checkout@v4.1.7
       with:
-        fetch-depth: 1
+        fetch-depth: 0
         
     - name: Run tests
       run: make test
@@ -27,6 +27,11 @@ jobs:
         APP_NAME=$(basename $(git remote get-url origin) .git)
         echo "APP_NAME=$APP_NAME"
         echo "APP_NAME=$APP_NAME" >> $GITHUB_ENV
+    - name: Git Version
+      uses: codacy/git-version@2.4.0
+      with:
+          release-branch: main
+          dev-branch: develop
     - name: Get version tag     
       id: get-version-tag
       run: |
@@ -35,7 +40,7 @@ jobs:
         echo "VERSION=$VERSION" >> $GITHUB_ENV
     - name: Update Helm chart values.yaml with new image tag
       run: |
-        sed -i 's/tag:.*/tag: "${{ env.VERSION }}-amd64"/' ./helm/values.yaml 
+        sed -i 's/tag:.*/tag: "${{ steps.version.outputs.version }}-amd64"/' ./helm/values.yaml 
         cat ./helm/values.yaml 
         pwd
         ls
@@ -50,7 +55,7 @@ jobs:
       with:
           token: ${{ secrets.PIPIGA }}
           release-name: kbot-helm
-          tag-name: ${{ env.VERSION }}-${{ env.TARGETARCH }}
+          tag-name: ${{ steps.version.outputs.version }}-${{ env.TARGETARCH }}
           asset-name: kbot-helm
           file: helm-0.1.0.tgz
         
