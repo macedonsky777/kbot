@@ -6,7 +6,7 @@ replicaCount: 1
 
 image:
   repository: "ghcr.io/macedonsky777/kbot"
-  tag: "v1.1.16-2bc2199"
+  tag: "v1.1.16-52d0578"
   arch: amd64
   os: linux
 secret:
